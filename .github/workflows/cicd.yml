@@ -50,8 +50,8 @@ jobs:
 
     - name: Check if app exists and create if not
       run: |
-        if ! ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku apps:exists $APP_NAME; then
-          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku apps:create $APP_NAME
-          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku letsencrypt:enable $APP_NAME
+        if ! ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} apps:exists $APP_NAME; then
+          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} apps:create $APP_NAME
+          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} letsencrypt:enable $APP_NAME
         fi
       shell: bash
