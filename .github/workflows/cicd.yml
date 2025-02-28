@@ -59,7 +59,7 @@ jobs:
     - name: Deploy or Rebuild Docker image on Dokku
       run: |
         set +e
-        DEPLOY_OUTPUT=$(ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} git:from-image $APP_NAME my-app/${{ env.APP_NAME }}:${{ github.sha }} 2>&1)
+        DEPLOY_OUTPUT=$(ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} git:from-image $APP_NAME my-image/${{ env.APP_NAME }}:${{ github.sha }} 2>&1)
         EXIT_CODE=$?
         echo "$DEPLOY_OUTPUT"
 
