@@ -30,3 +30,10 @@ jobs:
         fi
         echo "APP_NAME=$APP_NAME"
         echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
+
+    - name: Build Docker image
+      uses: docker/build-push-action@v4
+      with:
+        context: .
+        load: true
+        tags: my-image/${{ env.APP_NAME }}:${{ github.sha }}
