@@ -1,0 +1,32 @@
+name: Build and Deploy to Dokku
+
+on:
+  push:
+    branches: [main, dev] # [test/deploy]  # [main, dev]
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
+
+    - name: Get base app name from settings.ini and set $APP_NAME env variable based on branch name
+      shell: bash
+      run: |
+        BASE_APP_NAME=$(python -c "exec(\"import configparser; config = configparser.ConfigParser(); config.read('settings.ini'); print(config.get('DEFAULT', 'repo'))\")")
+        if [ "${{ github.head_ref || github.ref_name }}" = "main" ]; then
+          APP_NAME=$BASE_APP_NAME
+        else
+          APP_NAME=$BASE_APP_NAME-${{ github.head_ref || github.ref_name }}
+        fi
+        echo "APP_NAME=$APP_NAME"
+        echo "APP_NAME=$APP_NAME" >> $GITHUB_ENV
