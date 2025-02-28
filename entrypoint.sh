@@ -4,7 +4,8 @@ if [ -f .env ]; then
 fi
 
 # Set PORT_FRONTEND to 5000 if it is not already set
-PORT_FRONTEND=${PORT_FRONTEND:-5000}
+# PORT_FRONTEND=${PORT_FRONTEND:-5000}
+PORT_FRONTEND=5000
 
 # Check if the first argument is "--dev"
 if [ "$1" == "--dev" ]; then
