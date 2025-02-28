@@ -3,13 +3,9 @@ if [ -f .env ]; then
   source .env
 fi
 
-# Set PORT_FRONTEND to 5000 if it is not already set
-# PORT_FRONTEND=${PORT_FRONTEND:-5000}
-PORT_FRONTEND=5000
-
 # Check if the first argument is "--dev"
 if [ "$1" == "--dev" ]; then
-  python3.11 -m reflex run --loglevel debug
+  python3.11 -m reflex run
 else
-  python3.11 -m reflex run --env prod --loglevel debug
+  python3.11 -m reflex run --env prod
 fi
