@@ -47,3 +47,11 @@ jobs:
       run: |
         docker image save my-image/${{ env.APP_NAME }}:${{ github.sha }} | ssh -o StrictHostKeyChecking=no root@${{ secrets.DOKKU_SERVER_HOST }} "docker load"
       shell: bash
+
+    - name: Check if app exists and create if not
+      run: |
+        if ! ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku apps:exists $APP_NAME; then
+          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku apps:create $APP_NAME
+          ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku letsencrypt:enable $APP_NAME
+        fi
+      shell: bash
