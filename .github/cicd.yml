@@ -1,0 +1,21 @@
+name: Build and Deploy to Dokku
+
+on:
+  workflow_call:
+
+jobs:
+  build-and-deploy:
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
+    concurrency:
+      group: ${{ github.workflow }}-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v2
