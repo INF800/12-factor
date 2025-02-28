@@ -59,7 +59,7 @@ jobs:
     - name: Deploy or Rebuild Docker image on Dokku
       run: |
         set +e
-        DEPLOY_OUTPUT=$(ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku git:from-image $APP_NAME my-app/${{ env.APP_NAME }}:${{ github.sha }} 2>&1)
+        DEPLOY_OUTPUT=$(ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} git:from-image $APP_NAME my-app/${{ env.APP_NAME }}:${{ github.sha }} 2>&1)
         EXIT_CODE=$?
         echo "$DEPLOY_OUTPUT"
 
@@ -68,7 +68,7 @@ jobs:
         else
           if [[ "$DEPLOY_OUTPUT" == *"No changes detected, skipping git commit"* ]]; then
             echo "Rebuilding app due to 'No changes detected, skipping git commit'."
-            ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku ps:rebuild $APP_NAME
+            ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} ps:rebuild $APP_NAME
           else
             echo "Deployment failed with exit code $EXIT_CODE."
             exit $EXIT_CODE
