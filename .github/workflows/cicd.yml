@@ -55,3 +55,23 @@ jobs:
           ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} letsencrypt:enable $APP_NAME
         fi
       shell: bash
+
+    - name: Deploy or Rebuild Docker image on Dokku
+      run: |
+        set +e
+        DEPLOY_OUTPUT=$(ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku git:from-image $APP_NAME my-app/${{ env.APP_NAME }}:${{ github.sha }} 2>&1)
+        EXIT_CODE=$?
+        echo "$DEPLOY_OUTPUT"
+
+        if [ $EXIT_CODE -eq 0 ]; then
+          echo "Successfully deployed Docker image."
+        else
+          if [[ "$DEPLOY_OUTPUT" == *"No changes detected, skipping git commit"* ]]; then
+            echo "Rebuilding app due to 'No changes detected, skipping git commit'."
+            ssh dokku@${{ secrets.DOKKU_SERVER_HOST }} dokku ps:rebuild $APP_NAME
+          else
+            echo "Deployment failed with exit code $EXIT_CODE."
+            exit $EXIT_CODE
+          fi
+        fi
+      shell: bash
