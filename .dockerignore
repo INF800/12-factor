@@ -1,4 +1,4 @@
 .git
-.web
+# .web
 **/__pycache__/
 venv311
