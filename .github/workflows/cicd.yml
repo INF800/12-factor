@@ -37,3 +37,13 @@ jobs:
         context: .
         load: true
         tags: my-image/${{ env.APP_NAME }}:${{ github.sha }}
+
+    - name: Install SSH key
+      uses: webfactory/ssh-agent@v0.8.0
+      with:
+        ssh-private-key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
+
+    - name: Save and load Docker image on Dokku server
+      run: |
+        docker image save my-image/${{ env.APP_NAME }}:${{ github.sha }} | ssh -o StrictHostKeyChecking=no root@${{ secrets.DOKKU_SERVER_HOST }} "docker load"
+      shell: bash
